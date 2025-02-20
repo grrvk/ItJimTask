@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 
-import matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
@@ -10,15 +9,23 @@ from sklearn.metrics import accuracy_score, f1_score, classification_report
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
 
-from src.data_process import prepare_custom_input, print_predictions
 from src.models import FeedForwardNN, CNN
 import torch.nn as nn
 from torch.optim import SGD, Adam
 
-matplotlib.use("TkAgg")
+# When running with command-line uncomment to see confusion matrices
+# import matplotlib
+# matplotlib.use("TkAgg")
 
 
 def full_report(y, y_pred):
+    """
+    Calculates accuracy, macro-averaged f1 score
+    Prints classification report and visualizes confusion matrix
+    Parameters:
+            y (numpy.ndarray): Ground truth labels
+            y_pred (numpy.ndarray): Predicted labels
+    """
     accuracy = accuracy_score(y, y_pred)
     macro_f1 = f1_score(y, y_pred, average='macro')
     print(f'Accuracy {accuracy}, macro f1 {macro_f1}')
@@ -32,29 +39,64 @@ def full_report(y, y_pred):
 
 
 class MnistClassifierInterface(ABC):
+    """
+    Abstract interface class that defines methods for subclasses
+    """
     def __init__(self, model):
+        """
+        Initializes the model parameter for subclasses
+        """
         self.model = model
 
     @abstractmethod
     def train(self, train_dataloader):
+        """
+        Trains the model on train data
+        Parameters:
+            train_dataloader(torch.utils.data.Dataloader): Dataloader for train data
+        """
         pass
 
     @abstractmethod
     def test(self, test_dataloader):
+        """
+        Test model performance on test data
+        Parameters:
+            test_dataloader(torch.utils.data.Dataloader): Dataloader for test data
+        """
         pass
 
     @abstractmethod
     def predict(self, dataloader):
+        """
+        Uses trained model for prediction on data from user
+        Parameters:
+            dataloader(torch.utils.data.Dataloader): Dataloader for user data
+        """
         return
 
 
 class RFCClassifier(MnistClassifierInterface):
+    """
+    Classifier that uses Random Forest classification algorithm
+    """
     def __init__(self):
+        """
+        Initializes class parameter 'model' as Random Forest
+        """
         model = RandomForestClassifier(n_estimators=100)
         super().__init__(model)
 
     @staticmethod
     def prepare_data(dataloader):
+        """
+        Converts data from dataloader to suitable for sklearn model.fit format
+        Parameters:
+            dataloader(torch.utils.data.Dataloader): Dataloader for used data
+        Return:
+            X(numpy.ndarray): Data features
+            y(numpy.ndarray): Data labels
+        """
         X, y = [], []
         for images, labels in dataloader:
             X.extend(images.view(images.size(0), -1).numpy())
@@ -72,7 +114,7 @@ class RFCClassifier(MnistClassifierInterface):
         X_test, y_test = self.prepare_data(dataloader)
         y_pred = self.model.predict(X_test)
 
-        full_report(y_test, y_pred)
+        full_report(np.array(y_test), y_pred)
         return y_pred, y_test
 
     def predict(self, data):
@@ -82,7 +124,14 @@ class RFCClassifier(MnistClassifierInterface):
 
 
 class FFNClassifier(MnistClassifierInterface):
+    """
+    Classifier that uses Feed-Forward neural network
+    """
     def __init__(self):
+        """
+        Initializes class parameter 'model' as Feed-Forward Network
+        Sets optimizer and criterion for training
+        """
         model = FeedForwardNN()
         super().__init__(model)
         self.optimizer = SGD(self.model.parameters(), lr=0.01)
@@ -115,8 +164,9 @@ class FFNClassifier(MnistClassifierInterface):
                 y_pred.extend(predicted.numpy())
                 y_test.extend(labels.numpy())
 
+        y_test, y_pred = np.array(y_test), np.array(y_pred)
         full_report(y_test, y_pred)
-        return np.array(y_pred), np.array(y_test)
+        return y_pred, y_test
 
     def predict(self, data):
         with torch.no_grad():
@@ -126,6 +176,10 @@ class FFNClassifier(MnistClassifierInterface):
 
 
 class CNNClassifier(MnistClassifierInterface):
+    """
+    Initializes class parameter 'model' as Convolutional Neural Network
+    Sets optimizer and criterion for training
+    """
     def __init__(self):
         model = CNN()
         super().__init__(model)
@@ -159,8 +213,9 @@ class CNNClassifier(MnistClassifierInterface):
                 y_pred.extend(predicted.numpy())
                 y_test.extend(labels.numpy())
 
+        y_test, y_pred = np.array(y_test), np.array(y_pred)
         full_report(y_test, y_pred)
-        return np.array(y_pred), np.array(y_test)
+        return y_pred, y_test
 
     def predict(self, data):
         with torch.no_grad():
@@ -170,7 +225,15 @@ class CNNClassifier(MnistClassifierInterface):
 
 
 class MnistClassifier:
+    """
+    Wrapper class for Classifiers to provide one logic for using different models
+    """
     def __init__(self, algorithm):
+        """
+        Sets classifier according to algorithm name
+        :Parameters:
+            algorithm(str): algorithm name ('rf', 'nn', 'cnn')
+        """
         if algorithm == 'rf':
             self.classifier = RFCClassifier()
         elif algorithm == 'nn':

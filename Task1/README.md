@@ -51,7 +51,7 @@ Each algorithm has **train**, **test** and **predict** methods
 | Feed-Forward Neural Network (nn) | epochs=15, batch_size=64, lr=0.01, optimizer=SGD  | 97.34%   |
 | Convolutional Neural Network (cnn) | epochs=10, batch_size=64, lr=1e-4, optimizer=Adam | 98.90%   |
 
-### confusion matrices
+### Confusion matrices
 
 | RF                           | FFN                           | CNN                            |   
 |------------------------------|-------------------------------|--------------------------------|
@@ -59,7 +59,8 @@ Each algorithm has **train**, **test** and **predict** methods
 
 ## Run
 
-:exclamation: matplotlib uses TkAgg backend to open confusion matrix plot in a separate window 
+:exclamation: to see confusion matrices when running pipeline with command-line - 
+uncomment **matplotlib TkAgg**  in classifiers.py
 
 Clone the repository and install requirements
 
