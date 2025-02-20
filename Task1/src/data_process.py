@@ -4,12 +4,14 @@ import os
 
 import cv2
 import numpy as np
+import torch
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
-img_transforms = transforms.Compose([transforms.ToTensor(),
-                                     transforms.Normalize((0.1307,), (0.3081,)),
-                                     ])
+img_transforms = transforms.Compose(
+    [transforms.ToTensor(),
+     transforms.Normalize((0.1307,), (0.3081,)),
+     ])
 
 
 def load_mnist_dataset(transform):
@@ -61,16 +63,19 @@ def prepare_custom_input(data_path, target_image_size=(28, 28)):
         if img is None:
             print(f"Unable to read {image_path}")
             continue
-        img = cv2.resize(img, target_image_size)
+        img = cv2.resize(img, target_image_size, interpolation=cv2.INTER_AREA)
         images.append(img)
 
-    return image_paths, np.array(images, dtype=np.float32)
+    transform = transforms.Compose(
+        [transforms.ToTensor(),
+         transforms.Normalize((0.1307,), (0.3081,)),
+        ])
+    images = [transform(img) for img in images]
+    images = torch.stack(images)
+
+    return image_paths, images
 
 
 def print_predictions(data_paths, predictions):
     for path, label in zip(data_paths, predictions):
         print(f"Image: {os.path.basename(path)}, Predicted Label: {label}")
-
-
-
-
