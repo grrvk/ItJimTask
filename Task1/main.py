@@ -17,7 +17,6 @@ def main(algorithm: str, custom_input_path: str = None):
     if custom_input_path is not None:
         image_paths, prepared_data = prepare_custom_input(custom_input_path)
         predictions = classifier.predict(prepared_data)
-        print(type(predictions))
         print_predictions(image_paths, predictions)
 
 

@@ -112,7 +112,7 @@ def print_predictions(image_paths, predictions):
     Prepare data from user input path for prediction
     Parameters:
         image_paths(str): paths to images for which predictions were made
-        predictions():
+        predictions(numpy.ndarray): predicted labels
     """
     for path, label in zip(image_paths, predictions):
         print(f"Image: {os.path.basename(path)}, Predicted Label: {label}")
