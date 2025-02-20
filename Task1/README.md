@@ -59,7 +59,7 @@ Each algorithm has **train**, **test** and **predict** methods
 
 ## Run
 
-:star: Hi
+:exclamation: matplotlib uses TkAgg backend to open confusion matrix plot in a separate window 
 
 Clone the repository and install requirements
 
