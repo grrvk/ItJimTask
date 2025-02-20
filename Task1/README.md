@@ -45,11 +45,11 @@ Each algorithm has **train**, **test** and **predict** methods
 
 ### Training results
 
-| Model       | Hyperparameters                                  | Accuracy |
-|-------------|--------------------------------------------------|----------|
-| Random Forest (rf) | n_estimators=100                                 | 96.88%   |
-| Feed-Forward Neural Network (nn) | epochs=15, batch_size=64, lr=0.01, optimizer=SGD | 97.34%   |
-| Convolutional Neural Network (cnn) | epochs=7, batch_size=64, lr=0.01, optimizer=Adam | 98.52%   |
+| Model       | Hyperparameters                                   | Accuracy |
+|-------------|---------------------------------------------------|----------|
+| Random Forest (rf) | n_estimators=100                                  | 96.88%   |
+| Feed-Forward Neural Network (nn) | epochs=15, batch_size=64, lr=0.01, optimizer=SGD  | 97.34%   |
+| Convolutional Neural Network (cnn) | epochs=10, batch_size=64, lr=1e-4, optimizer=Adam | 98.90%   |
 
 ### confusion matrices
 

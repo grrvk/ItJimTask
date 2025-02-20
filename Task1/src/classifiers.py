@@ -128,9 +128,8 @@ class FFNClassifier(MnistClassifierInterface):
 class CNNClassifier(MnistClassifierInterface):
     def __init__(self):
         model = CNN()
-
         super().__init__(model)
-        self.optimizer = Adam(self.model.parameters(), lr=0.05)
+        self.optimizer = Adam(self.model.parameters(), lr=1e-4)
         self.criterion = nn.CrossEntropyLoss()
 
     def train(self, train_dataloader, n_epochs=10):

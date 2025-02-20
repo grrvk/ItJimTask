@@ -14,7 +14,7 @@ img_transforms = transforms.Compose(
      ])
 
 
-def load_mnist_dataset(transform):
+def load_mnist_dataset(transform=img_transforms):
     train_dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
     test_dataset = datasets.MNIST(root='./data', train=False, download=True, transform=transform)
     return train_dataset, test_dataset

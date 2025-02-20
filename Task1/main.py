@@ -1,11 +1,14 @@
 import argparse
 
-from src.data_process import get_data, prepare_custom_input, print_predictions
+from src.data_process import load_mnist_dataset, prepare_custom_input, print_predictions, get_dataloader
 from src.classifiers import MnistClassifier
 
 
 def main(algorithm: str, custom_input_path: str = None):
-    train_dataloader, test_dataloader = get_data()
+    train_dataset, test_dataset = load_mnist_dataset()
+    train_dataloader = get_dataloader(train_dataset, 64)
+    test_dataloader = get_dataloader(test_dataset, 64)
+
     classifier = MnistClassifier(algorithm)
 
     classifier.train(train_dataloader)
