@@ -5,11 +5,18 @@ import numpy as np
 from transformers import TrainingArguments, Trainer, DataCollatorForTokenClassification
 from seqeval.metrics import precision_score, recall_score, f1_score
 
-from Task2.NER.data import get_dataset_dict, tokenize
-from Task2.NER.ner_model import id2label, NERModel
+from NER.data import get_dataset_dict, tokenize
+from NER.ner_model import id2label, NERModel
 
 
 def compute_metrics(p):
+    """
+    Compute metrics
+    Parameters:
+        p: predictions and ground truth labels
+    Returns:
+        metrics(dict): dict of metrics (precision, recall, f1_score)
+    """
     predictions = np.argmax(p.predictions, axis=2)
     true_labels = p.label_ids
 
@@ -30,6 +37,9 @@ def compute_metrics(p):
     }
 
 def create_trainer(model, tokenized_datasets, tokenizer):
+    """
+    Initialize trainer parameters and trainer object
+    """
     data_collator = DataCollatorForTokenClassification(tokenizer=tokenizer)
 
     args = TrainingArguments(
@@ -53,6 +63,9 @@ def create_trainer(model, tokenized_datasets, tokenizer):
     return trainer
 
 def evaluate(trainer, tokenized_datasets):
+    """
+    Evaluate trained model on test data and return metrics
+    """
     test_results = trainer.evaluate(eval_dataset=tokenized_datasets["test"])
     print(f'Loss: {test_results["eval_loss"]}\n'
           f'Precision: {test_results["eval_precision"]}\n'
@@ -61,6 +74,9 @@ def evaluate(trainer, tokenized_datasets):
 
 
 def run_train_and_eval(model, savedir):
+    """
+    Method to prepare data, run train and evaluation, save trained model
+    """
     ner_model = NERModel(model)
     tokenizer, model = ner_model.ger_model_and_tokenizer()
 

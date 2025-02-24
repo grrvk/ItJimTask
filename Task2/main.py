@@ -2,12 +2,15 @@ import argparse
 
 from PIL import Image
 
-from Task2.CM.cm_inference import load_cm_model
-from Task2.NER.data import process_sentence
-from Task2.NER.ner_inference import load_ner_model
+from CM.cm_inference import load_cm_model
+from NER.data import process_sentence
+from NER.ner_inference import load_ner_model
 
 
 def main(ner_model, cm_model, path_to_image, text):
+    """
+    Combined NER and classification pipeline to determine truth of text statement about image
+    """
     ner_model = load_ner_model('distilbert-base-uncased', ner_model)
     cm_model = load_cm_model('google/vit-base-patch16-224', cm_model)
 

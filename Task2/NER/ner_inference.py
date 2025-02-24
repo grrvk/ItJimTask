@@ -2,10 +2,18 @@ import argparse
 
 from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline
 
-from Task2.NER.data import process_sentence
+from NER.data import process_sentence
 
 
-def load_model(model_type, model_path):
+def load_ner_model(model_type, model_path):
+    """
+    Load pretrained NER model
+    Parameters:
+        model_type(str): type of the model to init tokenizer
+        model_path(str): path to pretrained model folder
+    Returns:
+        pipe(transformers.pipeline.Pipeline): pipeline to run inference
+    """
     tokenizer = AutoTokenizer.from_pretrained(model_type)
     model = AutoModelForTokenClassification.from_pretrained(model_path)
     pipe = pipeline("ner", model=model, tokenizer=tokenizer, aggregation_strategy="first")
@@ -13,7 +21,13 @@ def load_model(model_type, model_path):
 
 
 def run_inference(model_type, load_directory):
-    pipe = load_model(model_type, f'{load_directory}/ner_model')
+    """
+    Perform NER on input text
+    Parameters:
+        model_type(str): type of the model to init tokenizer
+        load_directory(str): directory where NER model is stored
+    """
+    pipe = load_ner_model(model_type, f'{load_directory}/ner_model')
     text = input('Enter your input: ')
     text = process_sentence(text)
     results = pipe(text)

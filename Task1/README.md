@@ -67,7 +67,7 @@ Clone the repository and install requirements
 ```bash
   git clone https://github.com/grrvk/ItJimTask.git
   
-  cd ItJimTask/Task1
+  cd Task1
   
   pip install -r requirements.txt
 ```

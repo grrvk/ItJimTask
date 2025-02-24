@@ -1,11 +1,14 @@
 from transformers import ViTForImageClassification, ViTImageProcessor
 
-
+# correlation between labels and indices to init the model
 idx2label = {0: 'Cat', 1: 'Cow', 2: 'Dog', 3: 'Elephant', 4: 'Gorilla', 5: 'Hippo', 6: 'Lizard', 7: 'Monkey', 8: 'Mouse', 9: 'Panda', 10: 'Tiger', 11: 'Zebra'}
 label2idx = {'Cat': 0, 'Cow': 1, 'Dog': 2, 'Elephant': 3, 'Gorilla': 4, 'Hippo': 5, 'Lizard': 6, 'Monkey': 7, 'Mouse': 8, 'Panda': 9, 'Tiger': 10, 'Zebra': 11}
 
 
 class CMModel:
+    """
+    Class of the classification VIT model
+    """
     def __init__(self, model_name):
         self.model_name = model_name
 

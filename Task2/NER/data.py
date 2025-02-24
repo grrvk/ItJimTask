@@ -4,7 +4,7 @@ from datasets import DatasetDict, Dataset
 from sklearn.model_selection import train_test_split
 import pandas as pd
 
-from Task2.NER.ner_model import NERModel
+from NER.ner_model import NERModel
 import string
 import contractions
 
@@ -19,6 +19,13 @@ MODEL_NAME = 'distilbert-base-uncased'
 
 
 def process_sentence(sentence):
+    """
+    Preprocess user input text for NER pipeline
+    Parameters:
+        sentence(str): input text
+    Returns:
+        tokens(list(str)): array of preprocessed words from text
+    """
     lemmatizer = WordNetLemmatizer()
 
     sentence = contractions.fix(sentence)
@@ -29,7 +36,15 @@ def process_sentence(sentence):
     return tokens
 
 
-def get_dataset_dict(csv_path="Task2/NER/ner_dataset.csv", split_rate=0.2):
+def get_dataset_dict(csv_path="ner_dataset.csv", split_rate=0.2):
+    """
+    Load base dataset from csv, create separate train, validation and test sets
+    Parameters:
+        csv_path(str): path to base csv
+        split_rate(float): percentage of dataset to split into train, validation and test
+    Returns:
+        dataset(datasets.DatasetDict): dataset dict with train, validation and test sets
+    """
     def create_dataset(df):
         created_df = df.rename(columns={'Unnamed: 0': 'id'})
         created_df['words'] = created_df['words'].apply(lambda x: ast.literal_eval(x))
@@ -49,6 +64,14 @@ def get_dataset_dict(csv_path="Task2/NER/ner_dataset.csv", split_rate=0.2):
                         "test": create_dataset(test_df)})
 
 def tokenize(data, tokenizer):
+    """
+    Tokenize and align with labels dataset data for train, validation and test sets
+    Parameters:
+        data(datasets.DatasetDict): dataset dict with train, validation and test sets
+        tokenizer: model tokenizer to create valid tokens
+    Returns:
+        dataset dict with tokenizer valid data
+    """
     def tokenize_and_align_labels(examples):
         tokenized = tokenizer(examples["words"], truncation=True, padding=True, is_split_into_words=True)
         all_labels = []

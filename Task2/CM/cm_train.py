@@ -11,6 +11,13 @@ from Task2.CM.data import prepare_data
 
 
 def compute_metrics(eval_pred):
+    """
+    Compute metrics
+    Parameters:
+        eval_pred: predictions and ground truth labels
+    Returns:
+        metrics(dict): dict of metrics (accuracy, precision, recall, f1_score)
+    """
     predictions, labels = eval_pred
     predictions = np.argmax(predictions, axis=1)
     return {
@@ -21,11 +28,17 @@ def compute_metrics(eval_pred):
     }
 
 def collate_fn(examples):
+    """
+    Collate function to make data into valid batch
+    """
     pixel_values = torch.stack([example["pixel_values"] for example in examples])
     labels = torch.tensor([example["label"] for example in examples])
     return {"pixel_values": pixel_values, "labels": labels}
 
 def create_trainer(model, dataset, processor):
+    """
+    Initialize trainer parameters and trainer object
+    """
     args = TrainingArguments(
         use_cpu=True,
         eval_strategy="epoch",
@@ -49,6 +62,9 @@ def create_trainer(model, dataset, processor):
     return trainer
 
 def evaluate(trainer, dataset):
+    """
+    Evaluate trained model on test data and return metrics
+    """
     test_results = trainer.evaluate(dataset['test'])
     print(f'Loss: {test_results["eval_loss"]}\n'
           f'Precision: {test_results["eval_precision"]}\n'
@@ -56,6 +72,9 @@ def evaluate(trainer, dataset):
           f'F1: {test_results["eval_f1"]}\n')
 
 def run_train_and_eval(model, savedir):
+    """
+    Method to prepare data, run train and evaluation, save trained model
+    """
     dataset = prepare_data('/Users/vika/Desktop/dataset')
 
     cm_model = CMModel(model)

@@ -4,3 +4,5 @@ Task1/data
 Task1/.ipynb_checkpoints
 
 trainer_output
+Task2/models
+Task2/NER/ner_dataset.csv

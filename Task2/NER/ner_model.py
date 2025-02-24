@@ -1,11 +1,14 @@
 from transformers import AutoModelForTokenClassification, AutoTokenizer
 
-
+# correlation between tags and labels to init the model
 unique_labels = ["O", "B-AN", "I-AN"]
 label2id = {k: v for v, k in enumerate(unique_labels)}
 id2label = {v: k for v, k in enumerate(unique_labels)}
 
 class NERModel:
+    """
+    Class of the NER model
+    """
     def __init__(self, model_name):
         self.model_name = model_name
 
